@@ -1,0 +1,53 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Reference",
+"class": "Activation",
+"language": "GDScript",
+"path": "res://lib/activation.gd"
+}, {
+"base": "Reference",
+"class": "Matrix",
+"language": "GDScript",
+"path": "res://lib/matrix.gd"
+}, {
+"base": "Reference",
+"class": "NeuralNetwork",
+"language": "GDScript",
+"path": "res://lib/neural_network.gd"
+} ]
+_global_script_class_icons={
+"Activation": "",
+"Matrix": "",
+"NeuralNetwork": ""
+}
+
+[application]
+
+config/name="neuroevolution"
+run/main_scene="res://main.tscn"
+config/icon="res://icon.png"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
+
+[layer_names]
+
+2d_physics/layer_1="car"
+2d_physics/layer_2="wall"
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
