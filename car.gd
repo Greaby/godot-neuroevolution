@@ -10,8 +10,8 @@ export (float) var friction_force = .1
 export (float) var rotation_speed = 90
 
 
-var input_nodes = 15
-var hidden_nodes = 31
+var input_nodes = 8
+var hidden_nodes = 17
 var output_nodes = 3
 
 
@@ -35,19 +35,12 @@ func _process(delta: float) -> void:
 	fitness += delta
 	
 	var inputs = nn.predict([
-		float($Raycasts/Left.is_colliding()),
 		get_distance($Raycasts/Left),
-		float($Raycasts/UpLeft.is_colliding()),
 		get_distance($Raycasts/UpLeft),
-		float($Raycasts/UpLeft2.is_colliding()),
 		get_distance($Raycasts/UpLeft2),
-		float($Raycasts/Up.is_colliding()),
 		get_distance($Raycasts/Up),
-		float($Raycasts/UpRight.is_colliding()),
 		get_distance($Raycasts/UpRight),
-		float($Raycasts/UpRight2.is_colliding()),
 		get_distance($Raycasts/UpRight2),
-		float($Raycasts/Right.is_colliding()),
 		get_distance($Raycasts/Right),
 		velocity.length() / max_speed
 	])
@@ -88,7 +81,7 @@ func _on_IdleTimer_timeout() -> void:
 
 
 func get_distance(raycast: RayCast2D) -> float:
-	var distance: float = 0.0
+	var distance: float = 1.0
 	if raycast.is_colliding():
 		var raycast_length: float = raycast.cast_to.y
 		var origin: Vector2 = raycast.global_transform.get_origin()

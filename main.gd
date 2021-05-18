@@ -44,10 +44,12 @@ func respawn():
 		cars[1][1],
 		cars[2][1],
 		cars[3][1],
-		NeuralNetwork.new(15, 31, 3)
+		cars[4][1],
+		cars[5][1],
+		NeuralNetwork.new(8, 17, 3)
 	]
 	
-	for i in range(nns.size() * 2):
+	for i in range(nns.size() * 3):
 		var mother = nns[randi() % nns.size()]
 		var father = nns[randi() % nns.size()]
 		
