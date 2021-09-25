@@ -3,9 +3,7 @@ extends Node2D
 export (String, FILE) var car_ressource
 
 
-var cars = [
-	
-]
+var cars = []
 
 var generation = 0
 
@@ -61,7 +59,7 @@ func create_road(track: Array) -> void:
 func create_checkpoints(track: Array) -> void:
 	var index = 0
 	for position in track:
-		var checkpoint_scene = load("res://road/checkpoint.tscn").instance()
+		var checkpoint_scene = load("res://track/checkpoint.tscn").instance()
 		checkpoint_scene.position = position * track_map.cell_size * 2
 		checkpoint_scene.order = index
 		checkpoint_container.add_child(checkpoint_scene)
@@ -93,14 +91,11 @@ func spawn_car(nn = null) -> void:
 		car.nn = nn
 
 func respawn():
-	
 	reset_checkpoints()
-	print(cars.size())
 	if cars.size() == 0:
 		return
 
 	cars.sort_custom(self, "sort_best")
-	
 	
 	var nns = [
 		cars[0][1],
@@ -134,8 +129,6 @@ func mutate(value, row, col):
 	return value
 	
 func _process(delta: float) -> void:
-	
-	
 	if spawner.get_child_count() == 0:
 		generation += 1
 		if generation >= 4:
