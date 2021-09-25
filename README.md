@@ -1,5 +1,14 @@
 # Neural Network: Neuroevolution - Godot Engine
 
+<p>
+    <a href="https://github.com/Greaby/godot-neuroevolution/issues">
+      <img alt="Issues" src="https://img.shields.io/github/issues/greaby/godot-neuroevolution?color=D94D4C" />
+    </a>
+    <a href="https://github.com/Greaby/godot-neuroevolution/pulls">
+      <img alt="Pull requests" src="https://img.shields.io/github/issues-pr/greaby/godot-neuroevolution?color=ECA539" />
+    </a>
+</p>
+
 In this example, cars are driving on a circuit. They have sensors and a neural network. At first the cars don't know how to drive. 
 The cars that go the farthest are replicated together to create the next generation.
 
