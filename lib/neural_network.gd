@@ -1,3 +1,8 @@
+## Neural network
+##
+## It is a basic neural network with three layers (input, hidden and output).
+## The network is randomly initialized, it is possible to train it by passing it
+## the expected result for some input.
 class_name NeuralNetwork
 
 var input_nodes: int
@@ -15,6 +20,7 @@ var learning_rate: float
 var activation_function: FuncRef
 var activation_dfunction: FuncRef
 
+
 func _init(_input_nodes: int, _hidden_nodes: int, _output_nodes: int) -> void:
 	randomize()
 	input_nodes = _input_nodes;
@@ -30,6 +36,7 @@ func _init(_input_nodes: int, _hidden_nodes: int, _output_nodes: int) -> void:
 	set_learning_rate()
 	set_activation_function()
 
+
 # workaround issue #21461
 static func getClass():
 	return load("res://lib/neural_network.gd")
@@ -38,12 +45,13 @@ static func getClass():
 func set_learning_rate(_learning_rate: float = 0.1) -> void:
 	learning_rate = _learning_rate
 
+
 func set_activation_function(callback: FuncRef = funcref(Activation, "sigmoid"), dcallback: FuncRef = funcref(Activation, "dsigmoid")) -> void:
 	activation_function = callback
 	activation_dfunction = dcallback
 
-func predict(input_array: Array) -> Array:
 
+func predict(input_array: Array) -> Array:
 	var inputs = Matrix.from_array(input_array)
 	
 	var hidden = Matrix.product(weights_input_hidden, inputs)
@@ -95,6 +103,7 @@ func train(input_array: Array, target_array: Array):
 
 	bias_hidden = Matrix.add(bias_hidden, hidden_gradient)
 
+
 static func reproduce(a: NeuralNetwork, b: NeuralNetwork) -> NeuralNetwork:
 	var result = getClass().new(a.input_nodes, a.hidden_nodes, a.output_nodes)
 
@@ -113,6 +122,7 @@ static func mutate(nn: NeuralNetwork, callback: FuncRef) -> NeuralNetwork:
 	result.bias_hidden = Matrix.map(nn.bias_hidden, callback)
 	result.bias_output = Matrix.map(nn.bias_output, callback)
 	return result
+
 
 static func copy(nn : NeuralNetwork) -> NeuralNetwork:
 	var result = getClass().new(nn.input_nodes, nn.hidden_nodes, nn.output_nodes)

@@ -1,9 +1,15 @@
+## Matrix calculations.
+##
+## This class allows to perform all the basic operations with matrices.
+## (add, sub, multiply, scalar, dot product)
+## It is also possible to import and export matrices from an array.
 class_name Matrix
 
 var rows: int
 var cols: int
 
 var data = []
+
 
 func _init(_rows: int, _cols: int, value: float = 0.0) -> void:
 	randomize()
@@ -13,6 +19,7 @@ func _init(_rows: int, _cols: int, value: float = 0.0) -> void:
 		data.insert(row , [])
 		for col in range(cols):
 			data[row].insert(col, value)
+
 
 # workaround issue #21461
 static func getClass():
@@ -26,6 +33,7 @@ static func from_array(arr: Array) -> Matrix:
 
 	return result
 
+
 static func to_array(matrix: Matrix) -> Array:
 	var result = []
 	for row in range(matrix.rows):
@@ -33,6 +41,7 @@ static func to_array(matrix: Matrix) -> Array:
 			result.append(matrix.data[row][col])
 	  
 	return result
+
 
 static func rand(matrix: Matrix) -> Matrix:
 	randomize()
@@ -45,6 +54,7 @@ static func rand(matrix: Matrix) -> Matrix:
 	
 	return result
 
+
 static func add(a: Matrix, b: Matrix) -> Matrix:
 	assert(a.rows == b.rows and a.cols == b.cols)
 	
@@ -55,6 +65,7 @@ static func add(a: Matrix, b: Matrix) -> Matrix:
 			result.data[row][col] = a.data[row][col] + b.data[row][col]
 
 	return result
+
 
 static func subtract(a: Matrix, b: Matrix) -> Matrix:
 	assert(a.rows == b.rows and a.cols == b.cols)
@@ -67,6 +78,7 @@ static func subtract(a: Matrix, b: Matrix) -> Matrix:
 
 	return result
 
+
 static func scalar(matrix: Matrix, value: float) -> Matrix:
 	var result = getClass().new(matrix.rows, matrix.cols)
 	
@@ -75,6 +87,7 @@ static func scalar(matrix: Matrix, value: float) -> Matrix:
 			result.data[row][col] = matrix.data[row][col] * value
 	
 	return result
+
 
 static func product(a: Matrix, b: Matrix) -> Matrix:
 	assert(a.cols == b.rows)
@@ -89,6 +102,7 @@ static func product(a: Matrix, b: Matrix) -> Matrix:
 
 	return result
 
+
 static func multiply(a: Matrix, b: Matrix) -> Matrix:
 	assert(a.rows == b.rows and a.cols == b.cols)
 	
@@ -99,7 +113,8 @@ static func multiply(a: Matrix, b: Matrix) -> Matrix:
 			result.data[row][col] = a.data[row][col] * b.data[row][col]
 	
 	return result
-	
+
+
 static func random(a: Matrix, b: Matrix) -> Matrix:
 	var result = getClass().new(a.rows, a.cols)
 	for row in range(result.rows):
@@ -109,6 +124,7 @@ static func random(a: Matrix, b: Matrix) -> Matrix:
 	
 	return result
 
+
 static func transpose(matrix: Matrix) -> Matrix:
 	var result = getClass().new(matrix.cols, matrix.rows)
 
@@ -117,6 +133,7 @@ static func transpose(matrix: Matrix) -> Matrix:
 			result.data[row][col] = matrix.data[col][row]
 
 	return result
+
 
 static func copy(matrix: Matrix) -> Matrix:
 	var result = getClass().new(matrix.rows, matrix.cols)
@@ -134,6 +151,3 @@ static func map(matrix: Matrix, callback) -> Matrix:
 			result.data[row][col] = callback.call_func(matrix.data[row][col], row, col)
 
 	return result
-
-
-

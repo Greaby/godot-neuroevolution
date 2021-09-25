@@ -2,9 +2,7 @@ extends Node2D
 
 export (String, FILE) var car_ressource
 
-
 var cars = []
-
 var generation = 0
 
 onready var checkpoint_container := $Checkpoints
@@ -17,7 +15,8 @@ func _ready() -> void:
 	randomize()
 	track_generator.connect("generation_finished", self, "_on_track_generated")
 	track_generator.generate()
-	
+
+
 func _on_track_generated(track: Array) -> void:
 	reset_track()
 	create_road(track)
@@ -25,10 +24,12 @@ func _on_track_generated(track: Array) -> void:
 	set_spawn(track)
 	respawn()
 
+
 func reset_track() -> void:
 	track_map.clear()
 	for checkpoint in checkpoint_container.get_children():
 		checkpoint.queue_free()
+
 
 func create_road(track: Array) -> void:
 	for index in track.size():
@@ -75,7 +76,6 @@ func set_spawn(track: Array) -> void:
 		spawn_car()
 
 
-
 func reset_checkpoints():
 	for checkpoint in $Checkpoints.get_children():
 		checkpoint.reset()
@@ -89,6 +89,7 @@ func spawn_car(nn = null) -> void:
 	spawner.add_child(car)
 	if nn:
 		car.nn = nn
+
 
 func respawn():
 	reset_checkpoints()
@@ -122,12 +123,14 @@ func respawn():
 
 	cars = []
 
+
 func mutate(value, row, col):
 	if rand_range(0, 1) < 0.1:
 		value += rand_range(-0.5, 0.5)
 		
 	return value
-	
+
+
 func _process(delta: float) -> void:
 	if spawner.get_child_count() == 0:
 		generation += 1
@@ -138,10 +141,11 @@ func _process(delta: float) -> void:
 		
 		respawn()
 
+
 func kill(car) -> void:
 	cars.push_back([car.fitness, NeuralNetwork.copy(car.nn)])
 	car.queue_free()
 
+
 func sort_best(a, b) -> bool:
 	return a[0] > b[0]
-	

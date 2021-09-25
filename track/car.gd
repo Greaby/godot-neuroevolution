@@ -2,21 +2,17 @@ extends KinematicBody2D
 
 signal kill
 
-
 export (float) var max_speed = 400.0
 export (int) var acceleration_force = 15
 export (int) var mass = 25
 export (float) var friction_force = .1
 export (float) var rotation_speed = 90
 
-
 var input_nodes = 8
 var hidden_nodes = 17
 var output_nodes = 3
 
-
 var velocity = Vector2(0, 0)
-
 var checkpoints = 0
 
 var fitness: float = 0
@@ -24,12 +20,12 @@ var last_fitness: float = 0
 
 var nn: NeuralNetwork
 
+
 func _ready() -> void:
 	nn = NeuralNetwork.new(input_nodes, hidden_nodes, output_nodes)
 
 
 func _process(delta: float) -> void:
-	
 	check_idle()
 	
 	fitness += delta
@@ -50,11 +46,8 @@ func _process(delta: float) -> void:
 	var right_pressed: bool = inputs[2] > 0.5
 	
 	# move
-	
 	if not up_pressed:
 		velocity = velocity.linear_interpolate(Vector2(), friction_force)
-		#velocity.x = lerp(velocity.x, 0, friction_force)
-		#velocity.y = lerp(velocity.y, 0, friction_force)
 	
 	velocity += Vector2(acceleration_force * inputs[1], 0).rotated(rotation)
 	
@@ -70,11 +63,13 @@ func _process(delta: float) -> void:
 	
 	rotation = velocity.angle()
 
+
 func check_idle():
 	if fitness - last_fitness > 1 :
 		$IdleTimer.start()
 	
 	last_fitness = fitness
+
 
 func _on_IdleTimer_timeout() -> void:
 	emit_signal("kill", self)
@@ -89,6 +84,3 @@ func get_distance(raycast: RayCast2D) -> float:
 		distance = origin.distance_to(collision) / raycast_length
 
 	return distance
-
-
-
