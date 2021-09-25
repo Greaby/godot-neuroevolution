@@ -7,12 +7,14 @@
 radius = 7.69459
 height = 16.1342
 
-[node name="Car" type="KinematicBody2D"]
+[node name="Car" type="KinematicBody2D" groups=[
+"car",
+]]
 collision_mask = 2
 script = ExtResource( 2 )
 
 [node name="IdleTimer" type="Timer" parent="."]
-wait_time = 10.0
+wait_time = 4.0
 autostart = true
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -68,4 +70,5 @@ collision_mask = 2
 enabled = true
 cast_to = Vector2( 0, 40 )
 collision_mask = 2
+
 [connection signal="timeout" from="IdleTimer" to="." method="_on_IdleTimer_timeout"]

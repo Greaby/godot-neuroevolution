@@ -23,11 +23,17 @@ _global_script_classes=[ {
 "class": "NeuralNetwork",
 "language": "GDScript",
 "path": "res://lib/neural_network.gd"
+}, {
+"base": "Node",
+"class": "TrackGenerator",
+"language": "GDScript",
+"path": "res://lib/track_generator.gd"
 } ]
 _global_script_class_icons={
 "Activation": "",
 "Matrix": "",
-"NeuralNetwork": ""
+"NeuralNetwork": "",
+"TrackGenerator": ""
 }
 
 [application]

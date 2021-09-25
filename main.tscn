@@ -1,69 +1,26 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://tileset/track.tres" type="TileSet" id=1]
-[ext_resource path="res://checkpoint.tscn" type="PackedScene" id=2]
 [ext_resource path="res://main.gd" type="Script" id=3]
+[ext_resource path="res://lib/track_generator.gd" type="Script" id=4]
+[ext_resource path="res://road/road.tres" type="TileSet" id=5]
+[ext_resource path="res://CarSpawner.tscn" type="PackedScene" id=6]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 3 )
 car_ressource = "res://car.tscn"
 
-[node name="TileMap" type="TileMap" parent="."]
-tile_set = ExtResource( 1 )
-cell_size = Vector2( 128, 128 )
+[node name="TrackGenerator" type="Node" parent="."]
+script = ExtResource( 4 )
+area = Rect2( 0, 0, 15, 8 )
+line_priority = 2
+track_max_length = 30
+
+[node name="Track" type="TileMap" parent="."]
+scale = Vector2( 2, 2 )
+tile_set = ExtResource( 5 )
 collision_layer = 2
 format = 1
-tile_data = PoolIntArray( 65537, 1, 0, 65538, -1610612736, 0, 65539, -1610612735, 0, 65540, -2147483647, 0, 65541, -1610612736, 0, 65542, -1610612736, 0, 65543, -1610612736, 0, 65544, -1610612736, 0, 65545, -1610612736, 0, 65546, -1610612736, 0, 65547, -1610612736, 0, 65548, -1610612735, 0, 131073, 0, 0, 131075, 536870912, 0, 131076, 536870912, 0, 131078, 1, 0, 131079, -536870912, 0, 131080, -2147483648, 0, 131081, 536870913, 0, 131084, 1610612736, 0, 196609, 0, 0, 196610, -2147483647, 0, 196611, -536870911, 0, 196612, 536870912, 0, 196614, 1073741825, 0, 196615, 536870913, 0, 196617, 1073741825, 0, 196618, 536870913, 0, 196620, 0, 0, 262145, 0, 0, 262146, 1073741825, 0, 262147, 536870913, 0, 262148, 536870912, 0, 262150, -2147483647, 0, 262151, -536870911, 0, 262154, 1073741825, 0, 262155, -1610612735, 0, 262156, 0, 0, 327681, 0, 0, 327683, 1073741825, 0, 327684, -536870911, 0, 327686, 0, 0, 327691, 1610612736, 0, 327692, -1073741823, 0, 327693, -1610612735, 0, 393217, 1073741825, 0, 393218, 536870913, 0, 393220, -2147483647, 0, 393221, 536870913, 0, 393222, -1073741823, 0, 393223, -1610612736, 0, 393224, -1610612736, 0, 393225, -1610612736, 0, 393226, -1610612735, 0, 393227, 1610612736, 0, 393229, 1610612736, 0, 458754, 1073741825, 0, 458755, -1610612736, 0, 458756, -536870911, 0, 458757, 1073741825, 0, 458758, -1610612736, 0, 458759, -1610612736, 0, 458760, -1610612736, 0, 458761, -1610612736, 0, 458762, 1610612737, 0, 458763, -1073741823, 0, 458764, -1073741824, 0, 458765, 1610612737, 0 )
 
 [node name="Checkpoints" type="Node2D" parent="."]
 
-[node name="Checkpoint1" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 1223, 192 )
-
-[node name="Checkpoint2" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 1601, 281 )
-rotation = 1.57079
-
-[node name="Checkpoint3" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 1733, 775 )
-rotation = 1.57079
-
-[node name="Checkpoint4" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 1476, 817 )
-rotation = 1.57079
-
-[node name="Checkpoint5" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 1285, 449 )
-
-[node name="Checkpoint6" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 967, 322 )
-
-[node name="Checkpoint7" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 832, 705 )
-rotation = 1.57079
-
-[node name="Checkpoint8" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 1135, 830 )
-rotation = -3.14159
-
-[node name="Checkpoint9" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 1047, 961 )
-
-[node name="Checkpoint10" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 639, 834 )
-
-[node name="Checkpoint11" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 194, 527 )
-rotation = 1.57079
-
-[node name="Checkpoint12" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 320, 192 )
-
-[node name="Checkpoint13" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 513, 705 )
-
-[node name="Checkpoint14" parent="Checkpoints" instance=ExtResource( 2 )]
-position = Vector2( 857, 192 )
-
-[node name="CarSpawner" type="Position2D" parent="."]
-position = Vector2( 1075, 190 )
+[node name="CarSpawner" parent="." instance=ExtResource( 6 )]
