@@ -9,7 +9,7 @@ See also my projects :
 - [godot-perceptron](https://github.com/Greaby/godot-perceptron)
 - [godot-neural-network](https://github.com/Greaby/godot-neural-network)
 
-# How to use
+## How to use
 
 When we have chosen the best cars, we reproduce them to create a child.
 
@@ -22,3 +22,12 @@ We can also create random mutations in the neural network.
 ```gdscript
 var child = NeuralNetwork.mutate(car, funcref(self, "mutate"))
 ```
+
+## Dependencies
+
+This project require Godot Engine 3.3.
+
+## Licenses
+
+-   The source code is available under the MIT license.
+-   Art Assets are available under CC0 1.0 Universal ([Racing Pack by Kenney](https://www.kenney.nl/assets/racing-pack))
