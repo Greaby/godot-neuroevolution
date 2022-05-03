@@ -1,0 +1,6 @@
+Instead of passing Funcref,
+you do Callable(Script/CLass Name, "name of function")
+
+Note: You have to do Callback.call() to utilise callbacks
+
+If you find errors, please do not hesitate to contact me.
