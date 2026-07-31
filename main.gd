@@ -31,6 +31,7 @@ var total_checkpoints = 0
 @onready var track_generator := $TrackGenerator
 @onready var track_map := $Track
 @onready var spawner := $CarSpawner
+@onready var camera := $Camera2D
 
 
 func _ready() -> void:
@@ -44,7 +45,20 @@ func _on_track_generated(track: Array) -> void:
 	create_road(track)
 	create_checkpoints(track)
 	set_spawn(track)
+	center_camera(track)
 	respawn()
+
+
+func center_camera(track: Array) -> void:
+	var min_position: Vector2 = track[0]
+	var max_position: Vector2 = track[0]
+
+	for track_position in track:
+		min_position = min_position.min(track_position)
+		max_position = max_position.max(track_position)
+
+	var tile_size := Vector2(track_map.tile_set.tile_size) * 2
+	camera.global_position = (min_position + max_position) / 2 * tile_size
 
 
 func reset_track() -> void:
