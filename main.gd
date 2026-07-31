@@ -1,19 +1,41 @@
 extends Node2D
 
-export (String, FILE) var car_ressource
+const TILE_IDS := {
+	"vertical": 0,
+	"horizontal": 0,
+	"down_right": 1,
+	"down_left": 1,
+	"up_right": 1,
+	"up_left": 1,
+	"start_vertical": 6,
+	"start_horizontal": 6,
+}
+const TILE_ALTERNATIVES := {
+	"horizontal": 5,
+	"down_right": 0,
+	"down_left": 5,
+	"up_right": 6,
+	"up_left": 3,
+	"start_horizontal": 5,
+}
+
+const SELECTED_COUNT = 6
+
+@export var car_ressource: PackedScene
 
 var cars = []
 var generation = 0
+var total_checkpoints = 0
 
-onready var checkpoint_container := $Checkpoints
-onready var track_generator := $TrackGenerator
-onready var track_map := $Track
-onready var spawner := $CarSpawner
+@onready var checkpoint_container := $Checkpoints
+@onready var track_generator := $TrackGenerator
+@onready var track_map := $Track
+@onready var spawner := $CarSpawner
 
 
 func _ready() -> void:
 	randomize()
-	track_generator.connect("generation_finished", self, "_on_track_generated")
+	track_generator.connect("generation_finished", Callable(self, "_on_track_generated"))
 	track_generator.generate()
 
 
@@ -33,45 +55,47 @@ func reset_track() -> void:
 
 func create_road(track: Array) -> void:
 	for index in track.size():
-		var position = track[index]
-		
-		var next_direction = position.direction_to(track[(index + 1) % track.size()])
-		var prev_direction = position.direction_to(track[index - 1])
+		var track_position = track[index]
+
+		var next_direction = track_position.direction_to(track[(index + 1) % track.size()])
+		var prev_direction = track_position.direction_to(track[index - 1])
 
 		match [index, prev_direction, next_direction]:
 			[0, Vector2.UP, _], [0, Vector2.DOWN, _]:
-				track_map.set_cellv(position, track_map.tile_set.find_tile_by_name("start_vertical"))
+				track_map.set_cell(0, Vector2i(track_position), TILE_IDS.start_vertical, Vector2i.ZERO)
 			[0, Vector2.RIGHT, _], [0, Vector2.LEFT, _]:
-				track_map.set_cellv(position, track_map.tile_set.find_tile_by_name("start_horizontal"))
+				track_map.set_cell(0, Vector2i(track_position), TILE_IDS.start_horizontal, Vector2i.ZERO, TILE_ALTERNATIVES.start_horizontal)
 			[_, Vector2.UP, Vector2.RIGHT], [_, Vector2.RIGHT, Vector2.UP]:
-				track_map.set_cellv(position, track_map.tile_set.find_tile_by_name("up_right"))
+				track_map.set_cell(0, Vector2i(track_position), TILE_IDS.up_right, Vector2i.ZERO, TILE_ALTERNATIVES.up_right)
 			[_, Vector2.UP, Vector2.DOWN], [_, Vector2.DOWN, Vector2.UP]:
-				track_map.set_cellv(position, track_map.tile_set.find_tile_by_name("vertical"))
+				track_map.set_cell(0, Vector2i(track_position), TILE_IDS.vertical, Vector2i.ZERO)
 			[_, Vector2.UP, Vector2.LEFT], [_, Vector2.LEFT, Vector2.UP]:
-				track_map.set_cellv(position, track_map.tile_set.find_tile_by_name("up_left"))
+				track_map.set_cell(0, Vector2i(track_position), TILE_IDS.up_left, Vector2i.ZERO, TILE_ALTERNATIVES.up_left)
 			[_, Vector2.RIGHT, Vector2.DOWN], [_, Vector2.DOWN, Vector2.RIGHT]:
-				track_map.set_cellv(position, track_map.tile_set.find_tile_by_name("down_right"))
+				track_map.set_cell(0, Vector2i(track_position), TILE_IDS.down_right, Vector2i.ZERO, TILE_ALTERNATIVES.down_right)
 			[_, Vector2.RIGHT, Vector2.LEFT], [_, Vector2.LEFT, Vector2.RIGHT]:
-				track_map.set_cellv(position, track_map.tile_set.find_tile_by_name("horizontal"))
+				track_map.set_cell(0, Vector2i(track_position), TILE_IDS.horizontal, Vector2i.ZERO, TILE_ALTERNATIVES.horizontal)
 			[_, Vector2.DOWN, Vector2.LEFT], [_, Vector2.LEFT, Vector2.DOWN]:
-				track_map.set_cellv(position, track_map.tile_set.find_tile_by_name("down_left"))
+				track_map.set_cell(0, Vector2i(track_position), TILE_IDS.down_left, Vector2i.ZERO, TILE_ALTERNATIVES.down_left)
 
 
 func create_checkpoints(track: Array) -> void:
 	var index = 0
 	for position in track:
-		var checkpoint_scene = load("res://track/checkpoint.tscn").instance()
-		checkpoint_scene.position = position * track_map.cell_size * 2
+		var checkpoint_scene = load("res://track/checkpoint.tscn").instantiate()
+		checkpoint_scene.position = position * Vector2(track_map.tile_set.tile_size) * 2
 		checkpoint_scene.order = index
 		checkpoint_container.add_child(checkpoint_scene)
-		
+
 		index += 1
+
+	total_checkpoints = index
 
 
 func set_spawn(track: Array) -> void:
-	spawner.global_position = track[0] * track_map.cell_size * 2 + track_map.cell_size
+	spawner.global_position = track[0] * Vector2(track_map.tile_set.tile_size) * 2 + Vector2(track_map.tile_set.tile_size)
 	spawner.direction = track[1] - track[0]
-	
+
 	for i in range(20):
 		spawn_car()
 
@@ -82,9 +106,9 @@ func reset_checkpoints():
 
 
 func spawn_car(nn = null) -> void:
-	var car = load(car_ressource).instance()
-	
-	car.connect("kill", self, "kill")
+	var car = car_ressource.instantiate()
+
+	car.connect("kill", Callable(self, "kill"))
 	car.rotation = spawner.direction.angle()
 	spawner.add_child(car)
 	if nn:
@@ -96,28 +120,23 @@ func respawn():
 	if cars.size() == 0:
 		return
 
-	cars.sort_custom(self, "sort_best")
-	
-	var nns = [
-		cars[0][1],
-		cars[1][1],
-		cars[2][1],
-		cars[3][1],
-		cars[4][1],
-		cars[5][1],
-		NeuralNetwork.new(8, 17, 3)
-	]
-	
+	cars.sort_custom(Callable(self, "sort_best"))
+
+	var nns = []
+	for i in range(min(SELECTED_COUNT, cars.size())):
+		nns.push_back(cars[i][1])
+	nns.push_back(NeuralNetwork.new(8, 17, 3))
+
 	for i in range(nns.size() * 3):
 		var mother = nns[randi() % nns.size()]
 		var father = nns[randi() % nns.size()]
-		
+
 		nns.push_back(NeuralNetwork.reproduce(mother, father))
 
 	for i in range(nns.size()):
 		var nn = nns[randi() % nns.size()]
-		nns.push_back(NeuralNetwork.mutate(nn, funcref(self, "mutate")))
-		
+		nns.push_back(NeuralNetwork.mutate(nn, Callable(self, "mutate")))
+
 	for nn in nns:
 		spawn_car(nn)
 
@@ -125,21 +144,41 @@ func respawn():
 
 
 func mutate(value, row, col):
-	if rand_range(0, 1) < 0.1:
-		value += rand_range(-0.5, 0.5)
-		
+	if randf_range(0, 1) < 0.1:
+		value += randf_range(-0.5, 0.5)
+
 	return value
+
+
+func count_finished_cars() -> int:
+	var count = 0
+	for car in spawner.get_children():
+		if car.checkpoints >= total_checkpoints:
+			count += 1
+
+	return count
+
+
+func next_generation() -> void:
+	generation += 1
+	if generation >= 10:
+		generation = 0
+		track_generator.generate()
+		return
+
+	respawn()
 
 
 func _process(delta: float) -> void:
 	if spawner.get_child_count() == 0:
-		generation += 1
-		if generation >= 4:
-			generation = 0
-			track_generator.generate()
-			return
-		
-		respawn()
+		next_generation()
+		return
+
+	if count_finished_cars() >= SELECTED_COUNT:
+		for car in spawner.get_children():
+			kill(car)
+
+		next_generation()
 
 
 func kill(car) -> void:

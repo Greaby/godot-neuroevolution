@@ -10,6 +10,7 @@ var registered_cars = []
 
 func reset():
 	reward = BASE_REWARD
+	registered_cars = []
 
 
 func is_at_step(body: Node) -> bool:

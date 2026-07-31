@@ -8,11 +8,9 @@ class_name Matrix
 var rows: int
 var cols: int
 
-var data = []
-
+var data: Array = []
 
 func _init(_rows: int, _cols: int, value: float = 0.0) -> void:
-	randomize()
 	rows = _rows
 	cols = _cols
 	for row in range(rows):
@@ -21,44 +19,33 @@ func _init(_rows: int, _cols: int, value: float = 0.0) -> void:
 			data[row].insert(col, value)
 
 
-# workaround issue #21461
-static func getClass():
-	return load("res://lib/matrix.gd")
-
-
 static func from_array(arr: Array) -> Matrix:
-	var result = getClass().new(arr.size(), 1)
+	var result = Matrix.new(arr.size(), 1)
 	for row in range(result.rows):
 		result.data[row][0] = arr[row]
 
 	return result
-
 
 static func to_array(matrix: Matrix) -> Array:
 	var result = []
 	for row in range(matrix.rows):
 		for col in range(matrix.cols):
 			result.append(matrix.data[row][col])
-	  
-	return result
 
+	return result
 
 static func rand(matrix: Matrix) -> Matrix:
-	randomize()
-	
-	var result = getClass().new(matrix.rows, matrix.cols)
-	
+	var result = Matrix.new(matrix.rows, matrix.cols)
+
 	for row in range(result.rows):
 		for col in range(result.cols):
-			result.data[row][col] = rand_range(-1, 1)
-	
+			result.data[row][col] = randf_range(-1, 1)
 	return result
 
-
 static func add(a: Matrix, b: Matrix) -> Matrix:
-	assert(a.rows == b.rows and a.cols == b.cols)
-	
-	var result = getClass().new(a.rows, a.cols)
+	assert(a.rows == b.rows and a.cols == b.cols, "Matrix.add: matrices must have the same dimensions")
+
+	var result = Matrix.new(a.rows, a.cols)
 
 	for row in range(result.rows):
 		for col in range(result.cols):
@@ -66,11 +53,10 @@ static func add(a: Matrix, b: Matrix) -> Matrix:
 
 	return result
 
-
 static func subtract(a: Matrix, b: Matrix) -> Matrix:
-	assert(a.rows == b.rows and a.cols == b.cols)
+	assert(a.rows == b.rows and a.cols == b.cols, "Matrix.subtract: matrices must have the same dimensions")
 
-	var result = getClass().new(a.rows, a.cols)
+	var result = Matrix.new(a.rows, a.cols)
 
 	for row in range(result.rows):
 		for col in range(result.cols):
@@ -78,21 +64,19 @@ static func subtract(a: Matrix, b: Matrix) -> Matrix:
 
 	return result
 
-
 static func scalar(matrix: Matrix, value: float) -> Matrix:
-	var result = getClass().new(matrix.rows, matrix.cols)
-	
+	var result = Matrix.new(matrix.rows, matrix.cols)
+
 	for row in range(result.rows):
 		for col in range(result.cols):
 			result.data[row][col] = matrix.data[row][col] * value
-	
+
 	return result
 
-
 static func product(a: Matrix, b: Matrix) -> Matrix:
-	assert(a.cols == b.rows)
+	assert(a.cols == b.rows, "Matrix.product: a.cols must equal b.rows")
 
-	var result = getClass().new(a.rows, b.cols)
+	var result = Matrix.new(a.rows, b.cols)
 
 	for row in range(result.rows):
 		for col in range(result.cols):
@@ -102,31 +86,19 @@ static func product(a: Matrix, b: Matrix) -> Matrix:
 
 	return result
 
-
 static func multiply(a: Matrix, b: Matrix) -> Matrix:
-	assert(a.rows == b.rows and a.cols == b.cols)
-	
-	var result = getClass().new(a.rows, a.cols)
-	
+	assert(a.rows == b.rows and a.cols == b.cols, "Matrix.multiply: matrices must have the same dimensions")
+
+	var result = Matrix.new(a.rows, a.cols)
+
 	for row in range(result.rows):
 		for col in range(result.cols):
 			result.data[row][col] = a.data[row][col] * b.data[row][col]
-	
+
 	return result
-
-
-static func random(a: Matrix, b: Matrix) -> Matrix:
-	var result = getClass().new(a.rows, a.cols)
-	for row in range(result.rows):
-		for col in range(result.cols):
-			var random = rand_range(0, 1)
-			result.data[row][col] = a.data[row][col] if random > 0.5 else b.data[row][col]
-	
-	return result
-
 
 static func transpose(matrix: Matrix) -> Matrix:
-	var result = getClass().new(matrix.cols, matrix.rows)
+	var result = Matrix.new(matrix.cols, matrix.rows)
 
 	for row in range(result.rows):
 		for col in range(result.cols):
@@ -135,19 +107,28 @@ static func transpose(matrix: Matrix) -> Matrix:
 	return result
 
 
-static func copy(matrix: Matrix) -> Matrix:
-	var result = getClass().new(matrix.rows, matrix.cols)
+static func map(matrix: Matrix, callback: Callable) -> Matrix:
+	var result = Matrix.new(matrix.rows, matrix.cols)
+
 	for row in range(result.rows):
 		for col in range(result.cols):
-			result.data[row][col] = matrix.data[row][col]
+			result.data[row][col] = callback.call(matrix.data[row][col], row, col)
+
 	return result
 
 
-static func map(matrix: Matrix, callback) -> Matrix:
-	var result = getClass().new(matrix.rows, matrix.cols)
-	
+static func random(a: Matrix, b: Matrix) -> Matrix:
+	var result = Matrix.new(a.rows, a.cols)
 	for row in range(result.rows):
 		for col in range(result.cols):
-			result.data[row][col] = callback.call_func(matrix.data[row][col], row, col)
+			result.data[row][col] = a.data[row][col] if randf_range(0, 1) > 0.5 else b.data[row][col]
 
+	return result
+
+
+static func copy(matrix: Matrix) -> Matrix:
+	var result = Matrix.new(matrix.rows, matrix.cols)
+	for row in range(result.rows):
+		for col in range(result.cols):
+			result.data[row][col] = matrix.data[row][col]
 	return result

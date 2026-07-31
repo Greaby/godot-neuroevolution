@@ -1,26 +1,26 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene format=3 uid="uid://bxix26l1fl7ar"]
 
-[ext_resource path="res://main.gd" type="Script" id=3]
-[ext_resource path="res://lib/track_generator.gd" type="Script" id=4]
-[ext_resource path="res://assets/road.tres" type="TileSet" id=5]
-[ext_resource path="res://track/car_spawner.tscn" type="PackedScene" id=6]
+[ext_resource type="PackedScene" uid="uid://lhdws2ohrkk3" path="res://track/car.tscn" id="2_1bvp3"]
+[ext_resource type="Script" uid="uid://c4eaxs8xigk8d" path="res://main.gd" id="3"]
+[ext_resource type="Script" uid="uid://eioixtufkq6y" path="res://lib/track_generator.gd" id="4"]
+[ext_resource type="TileSet" uid="uid://ckurl4fy1tohw" path="res://assets/road.tres" id="5"]
+[ext_resource type="PackedScene" path="res://track/car_spawner.tscn" id="6"]
 
-[node name="Main" type="Node2D"]
-script = ExtResource( 3 )
-car_ressource = "res://track/car.tscn"
+[node name="Main" type="Node2D" unique_id=563570130]
+script = ExtResource("3")
+car_ressource = ExtResource("2_1bvp3")
 
-[node name="TrackGenerator" type="Node" parent="."]
-script = ExtResource( 4 )
-area = Rect2( 0, 0, 15, 8 )
+[node name="TrackGenerator" type="Node" parent="." unique_id=158104288]
+script = ExtResource("4")
+area = Rect2(0, 0, 15, 8)
 line_priority = 2
 track_max_length = 30
 
-[node name="Track" type="TileMap" parent="."]
-scale = Vector2( 2, 2 )
-tile_set = ExtResource( 5 )
-collision_layer = 2
-format = 1
+[node name="Track" type="TileMap" parent="." unique_id=372789519]
+scale = Vector2(2, 2)
+tile_set = ExtResource("5")
+format = 2
 
-[node name="Checkpoints" type="Node2D" parent="."]
+[node name="Checkpoints" type="Node2D" parent="." unique_id=910294963]
 
-[node name="CarSpawner" parent="." instance=ExtResource( 6 )]
+[node name="CarSpawner" parent="." unique_id=756121979 instance=ExtResource("6")]
