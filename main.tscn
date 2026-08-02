@@ -25,4 +25,4 @@ format = 2
 
 [node name="CarSpawner" parent="." unique_id=756121979 instance=ExtResource("6")]
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=232737845]

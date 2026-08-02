@@ -34,7 +34,7 @@ var child = NeuralNetwork.mutate(car, Callable(self, "mutate"))
 
 ## Dependencies
 
-This project require Godot Engine 4.7.
+This project requires Godot Engine 4.7.
 
 ## Licenses
 
